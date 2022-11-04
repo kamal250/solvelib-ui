@@ -1,9 +1,32 @@
 import Head from "next/head";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
+  const [books, setBooks] = useState([]);
+  const [products, setProducts] = useState([]);
+  const getBooks = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BOOK_SERVICE}`);
+      const data = await res.json();
+      setBooks(data?.results);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getProducts = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_MERCHANDISE_SERVICE}`);
+      const data = await res.json();
+      setProducts(data?.results);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
   useEffect(() => {
+    getBooks();
+    getProducts();
   }, []);
   return (
     <div className={styles.container}>
@@ -14,70 +37,67 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-      <h1 class="text-5xl font-bold mt-0 mb-6">Demonstration of Microservices</h1>
+      <h1 className="text-5xl font-bold mt-0 mb-6">Demonstration of Microservices</h1>
         <div className="grid grid-cols-2 gap-4">
           <section className="px-4 py-8 bg-gray-50">
-            <h3 class="text-3xl font-bold mb-8">Books list</h3>
-            <div class="flex justify-center">
-              <div class="bg-white rounded-lg border border-gray-200 w-96 text-gray-900">
-                <a
-                  href="#!"
-                  aria-current="true"
-                  class="
-                    block
-                    px-6
-                    py-2
-                    border-b border-gray-200
-                    w-full
-                    rounded-t-lg
-                    bg-blue-600
-                    text-white
-                    cursor-pointer
-                  "
-                >
-                  The current link item
-                </a>
-                <a
-                  href="#!"
-                  class="
-                    block
-                    px-6
-                    py-2
-                    border-b border-gray-200
-                    w-full
-                    hover:bg-gray-100 hover:text-gray-500
-                    focus:outline-none focus:ring-0 focus:bg-gray-200 focus:text-gray-600
-                    transition
-                    duration-500
-                    cursor-pointer
-                  "
-                >
-                  A second link item
-                </a>
+            <h3 className="text-3xl font-bold mb-8">Books list</h3>
+            <div className="flex justify-center">
+              <div className="bg-white rounded-lg border border-gray-200 w-96 text-gray-900">
+              {
+                books.map((book, index) => {
+                  return (
+                    <a
+                      href="#!"
+                      className="
+                        block
+                        px-6
+                        py-2
+                        border-b border-gray-200
+                        w-full
+                        hover:bg-gray-100 hover:text-gray-500
+                        focus:outline-none focus:ring-0 focus:bg-gray-200 focus:text-gray-600
+                        transition
+                        duration-500
+                        cursor-pointer
+                      "
+                      key={index}
+                    >
+                      {book.name}
+                    </a>
+                  );
+                })
+              }
               </div>
             </div>
           </section>
           <section className="px-4 py-8 bg-red-50">
-            <h3 class="text-3xl font-bold mb-8">Products list</h3>
-            <div class="flex justify-center">
-              <div class="bg-white rounded-lg border border-gray-200 w-96 text-gray-900">
-                <a
-                  href="#!"
-                  aria-current="true"
-                  class="
-                    block
-                    px-6
-                    py-2
-                    border-b border-gray-200
-                    w-full
-                    rounded-t-lg
-                    bg-blue-600
-                    text-white
-                    cursor-pointer
-                  "
-                >
-                  The current link item
-                </a>
+            <h3 className="text-3xl font-bold mb-8">Products list</h3>
+            <div className="flex justify-center">
+              <div className="bg-white rounded-lg border border-gray-200 w-96 text-gray-900">
+              {
+                products.map((product, index) => {
+                  return (
+                    <a
+                      href="#!"
+                      className="
+                        block
+                        px-6
+                        py-2
+                        border-b border-gray-200
+                        w-full
+                        hover:bg-gray-100 hover:text-gray-500
+                        focus:outline-none focus:ring-0 focus:bg-gray-200 focus:text-gray-600
+                        transition
+                        duration-500
+                        cursor-pointer
+                      "
+                      key={index}
+                    >
+                      {product.name}
+                    </a>
+                  );
+                })
+              }
               </div>
             </div>
           </section>
