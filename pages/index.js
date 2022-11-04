@@ -9,7 +9,9 @@ export default function Home() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BOOK_SERVICE}`);
       const data = await res.json();
-      setBooks(data?.results);
+      setTimeout(() => {
+        setBooks(data?.results);
+      }, 2000);
     } catch (err) {
       console.log(err);
     }
@@ -18,12 +20,19 @@ export default function Home() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_MERCHANDISE_SERVICE}`);
       const data = await res.json();
-      setProducts(data?.results);
+      setTimeout(() => {
+        setProducts(data?.results);
+      }, 2000);
     } catch (err) {
       console.log(err);
     }
   };
-  
+  const RenderNoProduct = () => {
+    return <span>No products available.</span>
+  }
+  const RenderNoBook = () => {
+    return <span>No books available.</span>
+  }
   useEffect(() => {
     getBooks();
     getProducts();
@@ -37,14 +46,15 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-      <h1 className="text-5xl font-bold mt-0 mb-6">Demonstration of Microservices</h1>
+      <h1 className="text-5xl font-bold mt-0 mb-6">Welcome to SolveLib</h1>
+      <h2 className="text-3xl mt-0 mb-6">Demonstration of Microservices</h2>
         <div className="grid grid-cols-2 gap-4">
           <section className="px-4 py-8 bg-gray-50">
             <h3 className="text-3xl font-bold mb-8">Books list</h3>
             <div className="flex justify-center">
               <div className="bg-white rounded-lg border border-gray-200 w-96 text-gray-900">
               {
-                books.map((book, index) => {
+                books && books.length > 0 ? books.map((book, index) => {
                   return (
                     <a
                       href="#!"
@@ -62,42 +72,44 @@ export default function Home() {
                       "
                       key={index}
                     >
-                      {book.name}
+                      {book.name} by <span className="text-red-700">{book.authorName}</span>
                     </a>
                   );
-                })
+                }) : <RenderNoBook />
               }
               </div>
             </div>
           </section>
-          <section className="px-4 py-8 bg-red-50">
+          <section className="px-4 py-8 bg-blue-50">
             <h3 className="text-3xl font-bold mb-8">Products list</h3>
             <div className="flex justify-center">
               <div className="bg-white rounded-lg border border-gray-200 w-96 text-gray-900">
-              {
-                products.map((product, index) => {
-                  return (
-                    <a
-                      href="#!"
-                      className="
-                        block
-                        px-6
-                        py-2
-                        border-b border-gray-200
-                        w-full
-                        hover:bg-gray-100 hover:text-gray-500
-                        focus:outline-none focus:ring-0 focus:bg-gray-200 focus:text-gray-600
-                        transition
-                        duration-500
-                        cursor-pointer
-                      "
-                      key={index}
-                    >
-                      {product.name}
-                    </a>
-                  );
-                })
-              }
+                {
+                  products && products.length > 0 ? products.map((product, index) => {
+                    return (
+                      <a
+                          href="#!"
+                          className="
+                            block
+                            px-6
+                            py-2
+                            border-b border-gray-200
+                            w-full
+                            hover:bg-gray-100 hover:text-gray-500
+                            focus:outline-none focus:ring-0 focus:bg-gray-200 focus:text-gray-600
+                            transition
+                            duration-500
+                            cursor-pointer
+                          "
+                          key={index}
+                        >
+                          <span className="text-green-700">{product.name}</span>
+                          <br/>
+                          {product.description}
+                        </a>
+                    );
+                  }) : <RenderNoProduct />
+                }
               </div>
             </div>
           </section>
